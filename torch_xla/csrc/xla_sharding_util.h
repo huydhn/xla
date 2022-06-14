@@ -15,12 +15,18 @@ class ShardingUtil {
   // lowering and before building the computation; otherwise, this is a no-op.
   static void SetHloSharding(LoweringContext* lowering_ctx);
 
+  // This is called separately before xrt compilation. This is also useful
+  // for debugging partitioned HLO computation and sharding propation.
   static xla::HloModuleProto SpmdPartitioningPass(
       const xla::HloModuleProto& hlo_proto,
       bool conv_halo_exchange_always_on_lhs = true,
       bool choose_faster_windowed_einsum_over_mem = false,
       bool unroll_windowed_einsum = false,
       bool bidirectional_windowed_einsum = false);
+
+  static std::vector<std::vector<ComputationClient::DataPtr>>
+  BuildPartitionedArguments(absl::Span<const DataPtr> arguments,
+                            absl::Span<const std::string> devices);
 };
 
 }  // namespace torch_xla
