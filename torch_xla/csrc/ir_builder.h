@@ -9,6 +9,7 @@
 #include "torch_xla/csrc/ops/expand.h"
 #include "torch_xla/csrc/ops/generic.h"
 #include "torch_xla/csrc/ops/ops.h"
+#include "torch_xla/csrc/ops/dynamic_ir.h"
 #include "torch_xla/csrc/tensor_util.h"
 
 namespace torch_xla {
@@ -143,8 +144,9 @@ struct XLAIrBuilder : torch::lazy::IrBuilder {
   // TODO(JackCaoG): implement these when dynamic Node Ir merged.
   torch::lazy::NodePtr MakeSizeNode(const torch::lazy::Value& input,
                                     size_t dim) const override {
-    XLA_ERROR() << "Need to implement";
-    return nullptr;
+    return torch::lazy::MakeNode<SizeNode>(input, dim);
+    // XLA_ERROR() << "Need to implement";
+    // return nullptr;
   }
   torch::lazy::NodePtr MakeSizeAdd(const torch::lazy::Value& a,
                                    const torch::lazy::Value& b) const override {
